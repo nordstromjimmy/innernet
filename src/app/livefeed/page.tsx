@@ -1,7 +1,10 @@
+"use client";
 import React from "react";
 import Header from "../components/Header";
+import { useRequireAuth } from "../hooks/useRequireAuth ";
 
 export default function LivePage() {
+  const { loading } = useRequireAuth();
   return (
     <main className="flex flex-col min-h-screen items-center bg-gradient-to-br from-blue-50 to-white text-gray-800 p-6">
       <Header />

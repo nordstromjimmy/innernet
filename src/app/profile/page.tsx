@@ -3,8 +3,10 @@ import React from "react";
 import Header from "../components/Header";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
+import { useRequireAuth } from "../hooks/useRequireAuth ";
 
 export default function ProfilePage() {
+  const { loading } = useRequireAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
