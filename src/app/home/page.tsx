@@ -32,6 +32,9 @@ export default function HomePage() {
       <Header />
 
       <section className="w-full max-w-3xl mx-auto bg-white rounded-xl p-6 shadow-md">
+        <h1 className="text-xl font-semibold text-blue-800 mb-4">
+          Share Your Thoughts
+        </h1>
         <ThoughtForm
           onNewThought={(newThought) => setThoughts([newThought, ...thoughts])}
         />
@@ -39,7 +42,7 @@ export default function HomePage() {
 
       <section className="w-full max-w-3xl mx-auto mt-10">
         <h2 className="text-xl font-semibold text-blue-800 mb-4">
-          Recent Thoughts
+          Your Recent Thoughts
         </h2>
         {!thoughts.length && <p>No thoughts yet..</p>}
         <div className="space-y-4">
@@ -73,7 +76,10 @@ export default function HomePage() {
                         )}
                         {thought.mood === "negative" && (
                           <span className="text-yellow-600 font-medium">
-                            – 📌 New task on profile
+                            – 📌
+                            <a href="/profile" className="cursor-pointer">
+                              New task on profile
+                            </a>
                           </span>
                         )}
                       </span>

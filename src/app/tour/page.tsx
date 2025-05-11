@@ -1,9 +1,11 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useRequireAuthLoggedIn } from "../hooks/useRequireAuth ";
 
 export default function Home() {
   const router = useRouter();
+  const { loading } = useRequireAuthLoggedIn();
   return (
     <main className="flex flex-col min-h-screen items-center justify-start bg-gradient-to-br from-blue-100 to-white text-gray-800 p-6">
       <div className="max-w-3xl w-full text-center mb-12">

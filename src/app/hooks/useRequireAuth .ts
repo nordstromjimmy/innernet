@@ -24,3 +24,24 @@ export function useRequireAuth() {
 
   return { loading };
 }
+
+export function useRequireAuthLoggedIn() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const check = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        router.push("/home");
+      } else {
+        setLoading(false);
+      }
+    };
+    check();
+  }, [router]);
+
+  return { loading };
+}

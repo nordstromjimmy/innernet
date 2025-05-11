@@ -28,7 +28,8 @@ Please return a JSON object with the following structure:
 {
   "echo": "<A kind, insightful reflection (2–4 sentences)>",
   "type": "<Growth category: self-worth, doubt, resilience, awareness, etc.>",
-  "mood": "<positive | neutral | negative>"
+  "mood": "<positive | neutral | negative>",
+  "action": "<A brief suggested reflection or personal exercise for negative thoughts. If mood is positive or neutral, return an empty string.>"
 }
 `;
 
@@ -41,7 +42,7 @@ Please return a JSON object with the following structure:
 
     const rawResponse = completion.choices[0]?.message?.content;
     const parsed = JSON.parse(rawResponse || "{}");
-    const { echo, type, mood } = parsed;
+    const { echo, type, mood, action } = parsed;
 
     if (!echo || !type || !mood) {
       return NextResponse.json(
@@ -97,6 +98,11 @@ Please return a JSON object with the following structure:
 
       xp_awarded = true;
     }
+
+    await supabase
+      .from("thoughts")
+      .update({ echo, type, mood, action, xp_awarded })
+      .eq("id", thoughtId);
 
     // Update thought with GPT response and XP info
     const { error } = await supabase
