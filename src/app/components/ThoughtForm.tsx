@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import toast from "react-hot-toast";
+import { formatSkillName } from "../lib/leveling";
 
 async function waitForEcho(thoughtId: string, maxTries = 10, delay = 2000) {
   for (let i = 0; i < maxTries; i++) {
@@ -41,6 +43,14 @@ export default function ThoughtForm({
       return;
     }
 
+    // 🔍 Fetch existing skill categories
+    const { data: skills } = await supabase
+      .from("skills")
+      .select("category")
+      .eq("user_id", user.id);
+
+    const existingCategories = skills?.map((s) => s.category) || [];
+
     const { data, error } = await supabase
 
       .from("thoughts")
@@ -66,8 +76,20 @@ export default function ThoughtForm({
 
       if (fullThought) {
         onNewThought(fullThought);
+
+        // 🧠 Check if a new type was unlocked
+        if (
+          fullThought.growthArea &&
+          !existingCategories.includes(fullThought.growthArea)
+        ) {
+          toast.success(
+            `🌱 New Growth Area Unlocked: ${formatSkillName(
+              fullThought.growthArea
+            )}`,
+            { duration: 4000 }
+          );
+        }
       } else {
-        // fallback: add thought anyway if GPT fails
         onNewThought(data);
       }
       setContent("");

@@ -19,18 +19,23 @@ export async function POST(req: Request) {
   }
 
   const prompt = `
-You are a wise, emotionally intelligent AI guide.
+You are a wise, emotionally intelligent AI guide who helps people understand their inner world.
 
 A user has shared the following personal thought:
 "${content}"
 
-Please return a JSON object with the following structure:
+Your job is to reflect with empathy, provide gentle insight, and encourage growth.
+
+Please return a JSON object with this structure:
+
 {
-  "echo": "<A kind, insightful reflection (2–4 sentences)>",
-  "type": "<Growth category: self-worth, doubt, resilience, awareness, etc.>",
-  "mood": "<positive | neutral | negative>",
-  "action": "<A brief suggested reflection or personal exercise for negative thoughts. If mood is positive or neutral, return an empty string.>"
+  "echo": "<A kind, insightful reflection (2–4 sentences) that helps the user gently see their thought from a new perspective. Speak warmly and humanely, as if you're a compassionate mentor or inner guide.>",
+  "growthArea": "<A single word that captures the inner theme of this thought — such as self-worth, identity, resilience, doubt, purpose, emotional-awareness, vulnerability, healing, or connection. This should reflect the *area of personal growth* this thought touches.>",
+  "mood": "<positive | neutral | negative — based on the emotional tone of the original thought.>",
+  "action": "<If mood is negative, suggest a small, practical inner exercise or reflection the user can try. Keep it gentle and doable (e.g. 'Try writing down three things you need to forgive yourself for.'). If mood is positive or neutral, return an empty string.>"
 }
+
+Only return the JSON object — do not explain or add anything else.
 `;
 
   try {
@@ -42,9 +47,9 @@ Please return a JSON object with the following structure:
 
     const rawResponse = completion.choices[0]?.message?.content;
     const parsed = JSON.parse(rawResponse || "{}");
-    const { echo, type, mood, action } = parsed;
+    const { echo, growthArea, mood, action } = parsed;
 
-    if (!echo || !type || !mood) {
+    if (!echo || !growthArea || !mood) {
       return NextResponse.json(
         { error: "Invalid response from GPT" },
         { status: 500 }
@@ -75,7 +80,7 @@ Please return a JSON object with the following structure:
         .from("skills")
         .select("*")
         .eq("user_id", userId)
-        .eq("category", type)
+        .eq("category", growthArea)
         .single();
 
       if (existingSkill) {
@@ -90,7 +95,7 @@ Please return a JSON object with the following structure:
         await supabase.from("skills").insert([
           {
             user_id: userId,
-            category: type,
+            category: growthArea,
             xp: 15,
           },
         ]);
@@ -101,13 +106,13 @@ Please return a JSON object with the following structure:
 
     await supabase
       .from("thoughts")
-      .update({ echo, type, mood, action, xp_awarded })
+      .update({ echo, growthArea, mood, action, xp_awarded })
       .eq("id", thoughtId);
 
     // Update thought with GPT response and XP info
     const { error } = await supabase
       .from("thoughts")
-      .update({ echo, type, mood, xp_awarded })
+      .update({ echo, growthArea, mood, xp_awarded })
       .eq("id", thoughtId);
 
     if (error) {
@@ -118,7 +123,7 @@ Please return a JSON object with the following structure:
       );
     }
 
-    return NextResponse.json({ success: true, echo, type, mood });
+    return NextResponse.json({ success: true, echo, growthArea, mood });
   } catch (err: any) {
     console.error("GPT error:", err.message);
     return NextResponse.json({ error: "GPT failed" }, { status: 500 });

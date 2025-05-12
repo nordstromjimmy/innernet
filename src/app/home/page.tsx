@@ -33,7 +33,7 @@ export default function HomePage() {
 
       <section className="w-full max-w-3xl mx-auto bg-white rounded-xl p-6 shadow-md">
         <h1 className="text-xl font-semibold text-blue-800 mb-4">
-          Share Your Thoughts
+          Share A Thought
         </h1>
         <ThoughtForm
           onNewThought={(newThought) => setThoughts([newThought, ...thoughts])}
@@ -68,7 +68,7 @@ export default function HomePage() {
                     </p>
                     <div className="text-xs text-gray-600 mt-2 flex justify-between">
                       <span>
-                        Type: {thought.type}{" "}
+                        Growth Area: {thought.growthArea}{" "}
                         {thought.mood !== "negative" && thought.xp_awarded && (
                           <span className="text-green-600 font-medium">
                             - 🪄+15 XP

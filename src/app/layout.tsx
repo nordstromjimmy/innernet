@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { UserProfileProvider } from "./context/UserProfileContext";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Innernet - Keep Your Inner Mood",
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Toaster position="top-center" />
         <UserProfileProvider>{children}</UserProfileProvider>
       </body>
     </html>

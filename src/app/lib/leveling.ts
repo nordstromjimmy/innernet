@@ -25,18 +25,38 @@ export function formatSkillName(raw: string): string {
 
 export const skillColors: Record<string, string> = {
   "self-worth": "bg-yellow-400",
-  awareness: "bg-blue-500",
-  resilience: "bg-green-500",
-  empathy: "bg-purple-500",
   doubt: "bg-orange-400",
+  resilience: "bg-green-500",
+  awareness: "bg-blue-500",
+  "emotional-awareness": "bg-sky-500",
+  acceptance: "bg-gray-400",
+  vulnerability: "bg-rose-400",
+  purpose: "bg-indigo-500",
+  forgiveness: "bg-teal-400",
+  focus: "bg-cyan-500",
+  healing: "bg-lime-500",
+  courage: "bg-red-500",
   gratitude: "bg-pink-400",
+  curiosity: "bg-violet-500",
+  connection: "bg-emerald-500",
+  empathy: "bg-purple-500", // In case you still use this
 };
 
 export const skillIcons: Record<string, string> = {
   "self-worth": "💪",
-  awareness: "🧠",
-  resilience: "🛡️",
-  empathy: "💛",
   doubt: "🌀",
+  resilience: "🛡️",
+  awareness: "🧠",
+  "emotional-awareness": "💓",
+  acceptance: "🫶",
+  vulnerability: "🌧️",
+  purpose: "🎯",
+  forgiveness: "🕊️",
+  focus: "🎧",
+  healing: "🌿",
+  courage: "🔥",
   gratitude: "🌸",
+  curiosity: "🔍",
+  connection: "🤝",
+  empathy: "💛", // if still used
 };

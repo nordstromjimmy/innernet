@@ -14,6 +14,7 @@ import {
   skillIcons,
 } from "../lib/leveling";
 import { useUserProfile } from "../context/UserProfileContext";
+import toast from "react-hot-toast";
 
 export default function ProfilePage() {
   const { loading } = useRequireAuth();
@@ -92,12 +93,12 @@ export default function ProfilePage() {
       name: profile.name,
       gender: profile.gender,
     });
-
+    toast.success("Profile updated!", { duration: 2000 });
     setShowSettings(false);
     await refreshProfile(); // ⬅️ refresh the context
   };
 
-  const handleCompleteTask = async (thoughtId: string, type: string) => {
+  const handleCompleteTask = async (thoughtId: string, growthArea: string) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -108,7 +109,7 @@ export default function ProfilePage() {
       .from("skills")
       .select("*")
       .eq("user_id", user.id)
-      .eq("category", type)
+      .eq("category", growthArea)
       .single();
 
     if (existingSkill) {
@@ -120,7 +121,7 @@ export default function ProfilePage() {
       await supabase.from("skills").insert([
         {
           user_id: user.id,
-          category: type,
+          category: growthArea,
           xp: 15,
         },
       ]);
@@ -135,13 +136,13 @@ export default function ProfilePage() {
     // 3. Refresh UI
     setTasks((prev) => prev.filter((task) => task.id !== thoughtId));
     setSkills((prev) => {
-      const existing = prev.find((s) => s.category === type);
+      const existing = prev.find((s) => s.category === growthArea);
       if (existing) {
         return prev.map((s) =>
-          s.category === type ? { ...s, xp: s.xp + 15 } : s
+          s.category === growthArea ? { ...s, xp: s.xp + 15 } : s
         );
       } else {
-        return [...prev, { category: type, xp: 15 }];
+        return [...prev, { category: growthArea, xp: 15 }];
       }
     });
   };
@@ -337,11 +338,11 @@ export default function ProfilePage() {
                   )}
 
                   <p className="text-xs text-gray-600 mb-2">
-                    Type: {formatSkillName(task.type)} — Earn 15 XP by
-                    completing this task
+                    Growth Area: {formatSkillName(task.growthArea)} — Earn 15 XP
+                    by completing this task
                   </p>
                   <button
-                    onClick={() => handleCompleteTask(task.id, task.type)}
+                    onClick={() => handleCompleteTask(task.id, task.growthArea)}
                     className="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 cursor-pointer"
                   >
                     Complete Task
