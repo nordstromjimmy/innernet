@@ -11,7 +11,10 @@
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
+    "@tailwindcss/typography": "^0.5.16",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.509.0",
+    "marked": "^15.0.11",
     "next": "15.3.2",
     "openai": "^4.98.0",
     "react": "^19.0.0",
