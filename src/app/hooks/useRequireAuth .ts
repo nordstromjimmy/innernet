@@ -35,7 +35,7 @@ export function useRequireAuthLoggedIn() {
         data: { session },
       } = await supabase.auth.getSession();
       if (session) {
-        router.push("/home");
+        router.push("/thoughts");
       } else {
         setLoading(false);
       }

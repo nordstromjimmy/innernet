@@ -18,7 +18,7 @@ export default function SignUoPage() {
     if (error) {
       setError(error.message);
     } else {
-      router.push("/home");
+      router.push("/thoughts");
     }
   };
   return (

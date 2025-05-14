@@ -24,7 +24,7 @@ export default function Header() {
       <div className="flex justify-between items-center py-4">
         {/* Logo and subtitle */}
         <div>
-          <Link className="text-3xl font-bold text-blue-900" href="/home">
+          <Link className="text-3xl font-bold text-blue-900" href="/thoughts">
             Innernet
           </Link>
           <p className="text-sm text-gray-600 hidden sm:block">
@@ -86,10 +86,10 @@ export default function Header() {
         {/* Desktop links */}
         <div className="hidden sm:flex items-center gap-6">
           <Link
-            href="/home"
+            href="/thoughts"
             className="text-blue-600 hover:underline font-medium"
           >
-            Home
+            Thoughts
           </Link>
           <Link
             href="/blog"
@@ -137,6 +137,12 @@ export default function Header() {
       {/* Mobile dropdown menu */}
       {menuOpen && (
         <div className="sm:hidden bg-white border-t border-gray-200 pt-2 pb-4 px-4 space-y-2">
+          <Link
+            href="/thoughts"
+            className="block text-blue-600 font-medium hover:underline"
+          >
+            Thoughts
+          </Link>
           <Link
             href="/blog"
             className="block text-blue-600 font-medium hover:underline"
