@@ -1,16 +1,41 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+import BlogFilterWrapper from "../components/BlogFilterWrapper";
 import Header from "../components/Header";
-import BlogList from "../components/BlogList";
-import { BlogMeta } from "../types/blog";
+import { useRequireAuth } from "../hooks/useRequireAuth ";
 import { createSupabaseServerClient } from "../lib/supabase-server";
+import { BlogMeta } from "../types/blog";
 
 export default async function BlogPage() {
+  //const { loading } = useRequireAuth(); TODO make client?
   const supabase = createSupabaseServerClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("title, slug, excerpt, growth_area, created_at")
+    .order("created_at", { ascending: false });
+
+  const rawPosts = data as {
+    title: string;
+    slug: string;
+    excerpt: string;
+    growth_area: string;
+    created_at: string;
+  }[];
+
+  const posts: BlogMeta[] = rawPosts.map((post) => ({
+    ...post,
+    growthArea: post.growth_area, // ✅ rename the key
+  }));
+
+  const { data: reads } = await supabase
+    .from("blog_reads")
+    .select("post_slug")
+    .eq("user_id", user?.id || "");
+
+  const readSlugs = reads?.map((r) => r.post_slug) || [];
 
   const { data: skills } = await supabase
     .from("skills")
@@ -19,32 +44,36 @@ export default async function BlogPage() {
 
   const discoveredAreas = skills?.map((s) => s.category) || [];
 
-  const posts = await getAllBlogPosts();
+  if (error) {
+    console.error("Error loading blog posts:", error.message);
+    return null;
+  }
 
   return (
-    <main className="flex flex-col min-h-screen items-center bg-gradient-to-br from-white to-blue-50 text-gray-800 p-6">
+    <main className="min-h-screen bg-gradient-to-br from-white to-blue-50 text-gray-800">
       <Header />
-      <div className="w-full max-w-4xl">
-        <h1 className="text-3xl font-bold text-blue-900 mb-6">Blog posts</h1>
-        <p className="text-gray-600 mb-10">
-          Reflections, essays, and stories written by selected users and
-          contributors. Dive deeper into the themes behind InnerNet.
-        </p>
-        <p className="text-gray-600 mb-4">Filter by Growth Area</p>
-        <BlogList posts={posts} visibleAreas={discoveredAreas} />
-      </div>
+
+      <section className="w-full max-w-5xl mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-extrabold text-blue-900 mb-2">
+            ✍️ InnerNet Blog
+          </h1>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Reflections, essays, and stories by contributors and mindful voices.
+            Discover perspectives across emotional growth and self-discovery.
+          </p>
+        </div>
+
+        {/* Optional: Tag filter can go here */}
+
+        <div className="grid md:grid-cols-1 gap-8">
+          <BlogFilterWrapper
+            posts={posts}
+            readSlugs={readSlugs}
+            visibleAreas={discoveredAreas}
+          />
+        </div>
+      </section>
     </main>
   );
-}
-
-async function getAllBlogPosts(): Promise<BlogMeta[]> {
-  const blogDir = path.join(process.cwd(), "content/blog");
-  const files = fs.readdirSync(blogDir);
-
-  return files.map((filename) => {
-    const filePath = path.join(blogDir, filename);
-    const fileContent = fs.readFileSync(filePath, "utf8");
-    const { data } = matter(fileContent);
-    return data as BlogMeta;
-  });
 }

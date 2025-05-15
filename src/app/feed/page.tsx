@@ -6,7 +6,7 @@ import { useRequireAuth } from "../hooks/useRequireAuth ";
 export default function LivePage() {
   const { loading } = useRequireAuth();
   return (
-    <main className="flex flex-col min-h-screen items-center bg-gradient-to-br from-blue-50 to-white text-gray-800 p-6">
+    <main className="flex flex-col min-h-screen items-center bg-gradient-to-br from-blue-50 to-white text-gray-800">
       <Header />
       <div className="w-full max-w-3xl text-center">
         <h1 className="text-3xl font-bold text-blue-900 mb-6">Live Feeds</h1>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useRequireAuth } from "../hooks/useRequireAuth ";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../lib/supabase-browser";
 import ThoughtForm from "../components/ThoughtForm";
 
 function formatDate(dateStr: string) {
@@ -28,7 +28,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-screen bg-gradient-to-br from-white to-blue-100 text-gray-800 p-6">
+    <main className="flex flex-col min-h-screen bg-gradient-to-br from-white to-blue-100 text-gray-800 px-4">
       <Header />
 
       <section className="w-full max-w-3xl mx-auto bg-white rounded-xl p-6 shadow-md">

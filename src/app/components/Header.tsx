@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../lib/supabase-browser";
 import { useUserProfile } from "../context/UserProfileContext";
 
 export default function Header() {
@@ -17,8 +17,6 @@ export default function Header() {
       ? "/male-avatar.png"
       : null;
 
-  console.log("PROFILE GENDER:", profile?.gender);
-  console.log("AVATAR SRC:", avatarSrc);
   return (
     <header className="w-full max-w-5xl mx-auto mb-6 px-4">
       <div className="flex justify-between items-center py-4">

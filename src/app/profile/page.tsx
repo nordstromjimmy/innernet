@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useRouter } from "next/navigation";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../lib/supabase-browser";
 import { useRequireAuth } from "../hooks/useRequireAuth ";
 import {
   getMainLevel,
@@ -148,7 +148,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen items-center bg-gradient-to-br from-white to-blue-100 text-gray-800 p-6">
+    <main className="flex flex-col min-h-screen items-center bg-gradient-to-br from-white to-blue-100 text-gray-800">
       <Header />
 
       <div className="w-full max-w-2xl space-y-10">
