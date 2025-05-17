@@ -88,7 +88,7 @@ export default function Header() {
             Thoughts
           </Link>
           <Link
-            href="/blogs"
+            href="/blog"
             className="text-blue-600 hover:underline font-medium"
           >
             Blog
@@ -141,7 +141,7 @@ export default function Header() {
             Thoughts
           </Link>
           <Link
-            href="/blogs"
+            href="/blog"
             className="block text-blue-600 font-medium hover:underline"
           >
             Blog

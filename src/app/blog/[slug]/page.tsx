@@ -1,18 +1,21 @@
+export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import { marked } from "marked";
 import { createSupabaseServerClient } from "@/app/lib/supabase-server";
 import Header from "@/app/components/Header";
 import MarkAsReadButton from "@/app/components/MarkAsReadButton";
 
-interface PageProps {
-  params: Promise<{
-    [slug: string]: string;
-  }>;
+export async function generateStaticParams() {
+  return [];
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
-  const resolvedSearchParams = await params;
-  const { slug } = resolvedSearchParams;
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
   const supabase = createSupabaseServerClient();
 
   const { data, error } = await supabase
