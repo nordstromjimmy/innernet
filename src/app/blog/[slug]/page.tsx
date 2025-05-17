@@ -4,12 +4,11 @@ import { createSupabaseServerClient } from "@/app/lib/supabase-server";
 import Header from "@/app/components/Header";
 import MarkAsReadButton from "@/app/components/MarkAsReadButton";
 
-type Props = {
+export default async function BlogPostPage({
+  params,
+}: {
   params: { slug: string };
-};
-
-export default async function BlogPostPage({ params }: Props) {
-  const { slug } = params;
+}) {
   const supabase = createSupabaseServerClient();
 
   const { data, error } = await supabase
@@ -41,7 +40,10 @@ export default async function BlogPostPage({ params }: Props) {
           />
 
           <div className="flex justify-end">
-            <MarkAsReadButton slug={slug} growthArea={data.growth_area} />
+            <MarkAsReadButton
+              slug={params.slug}
+              growthArea={data.growth_area}
+            />
           </div>
         </section>
       </div>
