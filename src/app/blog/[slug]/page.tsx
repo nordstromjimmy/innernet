@@ -9,6 +9,7 @@ type Props = {
 };
 
 export default async function BlogPostPage({ params }: Props) {
+  const { slug } = params;
   const supabase = createSupabaseServerClient();
 
   const { data, error } = await supabase
@@ -40,10 +41,7 @@ export default async function BlogPostPage({ params }: Props) {
           />
 
           <div className="flex justify-end">
-            <MarkAsReadButton
-              slug={params.slug}
-              growthArea={data.growth_area}
-            />
+            <MarkAsReadButton slug={slug} growthArea={data.growth_area} />
           </div>
         </section>
       </div>
