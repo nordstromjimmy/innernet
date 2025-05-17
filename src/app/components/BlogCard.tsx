@@ -20,21 +20,22 @@ export default function BlogCard({
 }) {
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition relative">
-      <h2 className="text-2xl font-semibold text-blue-800 mb-2">
-        {post.title}
-      </h2>
+      <div className="flex justify-between">
+        <Link href={`/blog/${post.slug}`}>
+          {" "}
+          <h2 className="text-2xl font-semibold text-blue-800 mb-2 hover:underline">
+            {post.title}
+          </h2>
+        </Link>
+
+        <p className="font-bold">{post.growthArea.replace("-", " ")}</p>
+      </div>
+
       <p className="text-gray-700 mb-3">{post.excerpt}</p>
 
-      <p className="text-sm text-gray-500 mb-6">
-        🗓️ {formatDate(new Date(post.created_at).toLocaleDateString())} •{" "}
-        {post.growthArea.replace("-", " ")}
+      <p className="text-sm text-gray-500">
+        🗓️ {formatDate(new Date(post.created_at).toLocaleDateString())}
       </p>
-      <Link
-        href={`/blog/${post.slug}`}
-        className="inline-block text-blue-600 hover:underline font-medium"
-      >
-        Read More →
-      </Link>
       {/* Read status badge */}
       <div className="absolute bottom-4 right-4 text-xs font-semibold">
         <span

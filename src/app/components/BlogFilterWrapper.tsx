@@ -1,7 +1,7 @@
 "use client";
-
 import { useState } from "react";
 import BlogList from "./BlogList";
+import { useHasMounted } from "../hooks/useHasMounted";
 
 export default function BlogFilterWrapper({
   posts,
@@ -13,6 +13,10 @@ export default function BlogFilterWrapper({
   readSlugs: string[];
 }) {
   const [selected, setSelected] = useState<string | null>(null);
+
+  const hasMounted = useHasMounted();
+
+  if (!hasMounted) return null;
 
   const filtered = selected
     ? posts.filter((p) => p.growthArea === selected)

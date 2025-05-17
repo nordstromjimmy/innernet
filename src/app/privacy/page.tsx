@@ -1,12 +1,12 @@
 export default function PrivacyPolicy() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-100 to-white text-gray-800 px-6 py-16">
+    <main className="px-6 py-16">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold text-blue-900 mb-6">
           Privacy Policy
         </h1>
         <p className="mb-4">
-          InnerNet is designed to be a private and thoughtful space. We respect
+          Innernet is designed to be a private and thoughtful space. We respect
           your privacy and only collect what’s necessary to make the app work
           well for you.
         </p>

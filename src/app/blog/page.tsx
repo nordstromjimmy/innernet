@@ -50,22 +50,19 @@ export default async function BlogPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-white to-blue-50 text-gray-800">
+    <main className="px-4">
       <Header />
 
-      <section className="w-full max-w-5xl mx-auto px-6 py-16">
+      <section className=" w-full max-w-5xl mx-auto px-6 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-blue-900 mb-2">
-            ✍️ InnerNet Blog
+            ✍️ Blog Posts
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Reflections, essays, and stories by contributors and mindful voices.
             Discover perspectives across emotional growth and self-discovery.
           </p>
         </div>
-
-        {/* Optional: Tag filter can go here */}
-
         <div className="grid md:grid-cols-1 gap-8">
           <BlogFilterWrapper
             posts={posts}

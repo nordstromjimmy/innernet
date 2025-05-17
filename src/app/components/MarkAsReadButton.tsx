@@ -53,7 +53,7 @@ export default function MarkAsReadButton({
   };
 
   return (
-    <div className="mt-6 flex justify-end">
+    <div>
       {alreadyRead ? (
         <p className="text-green-600 font-semibold">✓ Read</p>
       ) : (

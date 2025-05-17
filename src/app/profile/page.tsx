@@ -148,7 +148,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen items-center bg-gradient-to-br from-white to-blue-100 text-gray-800">
+    <main className="flex flex-col items-center text-gray-800 px-4">
       <Header />
 
       <div className="w-full max-w-2xl space-y-10">

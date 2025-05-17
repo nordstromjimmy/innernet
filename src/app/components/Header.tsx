@@ -1,12 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase-browser";
+import { useState } from "react";
 import { useUserProfile } from "../context/UserProfileContext";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [gender, setGender] = useState<string | null>(null);
 
   const { profile, loading } = useUserProfile();
 
@@ -23,10 +21,10 @@ export default function Header() {
         {/* Logo and subtitle */}
         <div>
           <Link className="text-3xl font-bold text-blue-900" href="/thoughts">
-            Innernet
+            INNERNET
           </Link>
           <p className="text-sm text-gray-600 hidden sm:block">
-            Welcome. Share what’s on your mind.
+            Grow your mind. One thought at a time.
           </p>
         </div>
 
@@ -96,7 +94,7 @@ export default function Header() {
             Blog
           </Link>
           <Link
-            href="/livefeed"
+            href="/feed"
             className="text-blue-600 hover:underline font-medium"
           >
             Feed
@@ -131,10 +129,11 @@ export default function Header() {
           </Link>
         </div>
       </div>
+      <div className="border-b-1 border-gray-300"></div>
 
       {/* Mobile dropdown menu */}
       {menuOpen && (
-        <div className="sm:hidden bg-white border-t border-gray-200 pt-2 pb-4 px-4 space-y-2">
+        <div className="sm:hidden bg-transparent border-t border-gray-200 pt-2 pb-4 px-4 space-y-2 ">
           <Link
             href="/thoughts"
             className="block text-blue-600 font-medium hover:underline"
@@ -148,7 +147,7 @@ export default function Header() {
             Blog
           </Link>
           <Link
-            href="/livefeed"
+            href="/feed"
             className="block text-blue-600 font-medium hover:underline"
           >
             Live Feeds

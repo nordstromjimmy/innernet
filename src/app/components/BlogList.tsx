@@ -23,6 +23,11 @@ export default function BlogList({
           isRead={readSlugs.includes(post.slug)}
         />
       ))}
+      {filtered.length === 0 && (
+        <p className="text-gray-500 italic text-center">
+          No blog posts found for that category.
+        </p>
+      )}
     </div>
   );
 }

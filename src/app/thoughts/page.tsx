@@ -28,7 +28,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-screen bg-gradient-to-br from-white to-blue-100 text-gray-800 px-4">
+    <main className="px-4">
       <Header />
 
       <section className="w-full max-w-3xl mx-auto bg-white rounded-xl p-6 shadow-md">

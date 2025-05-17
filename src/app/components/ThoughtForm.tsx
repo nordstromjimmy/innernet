@@ -115,6 +115,7 @@ export default function ThoughtForm({
         placeholder="What's on your mind?"
         rows={4}
         disabled={submitting}
+        required
       />
       <button
         type="submit"

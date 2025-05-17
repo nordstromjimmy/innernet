@@ -1,12 +1,12 @@
 export default function TermsOfService() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-100 to-white text-gray-800 px-6 py-16">
+    <main className="px-6 py-16">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold text-blue-900 mb-6">
           Terms Of Service
         </h1>
         <p className="mb-4">
-          By using InnerNet, you agree to the following terms. We keep things
+          By using Innernet, you agree to the following terms. We keep things
           simple because this is a space for reflection, not fine print.
         </p>
 
@@ -23,7 +23,7 @@ export default function TermsOfService() {
           2. Respect & Safety
         </h2>
         <p className="mb-4">
-          InnerNet is not a public social platform. Still, please don’t use it
+          Innernet is not a public social platform. Still, please don’t use it
           to post harmful or illegal content. We reserve the right to suspend
           accounts that violate this spirit.
         </p>
@@ -32,7 +32,7 @@ export default function TermsOfService() {
           3. Availability
         </h2>
         <p className="mb-4">
-          We’re always improving InnerNet, which means things may change or go
+          We’re always improving Innernet, which means things may change or go
           offline briefly. We’ll do our best to keep things smooth and safe.
         </p>
 
