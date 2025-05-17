@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { UserProfileProvider } from "./context/UserProfileContext";
 import { Toaster } from "react-hot-toast";
 import Footer from "./components/Footer";
+import PlausibleProvider from "next-plausible";
 
 export const metadata: Metadata = {
   icons: {
@@ -23,6 +24,7 @@ export default function RootLayout({
       <link rel="canonical" href="https://innernetapp.com/" />
       <meta name="robots" content="index, follow" />
       <body className="flex flex-col min-h-screen bg-gradient-to-br from-white to-blue-100 text-gray-800">
+        <PlausibleProvider domain="innernetapp.com"></PlausibleProvider>
         <main className="flex-grow">
           <Toaster position="top-center" />
           <UserProfileProvider>{children}</UserProfileProvider>
