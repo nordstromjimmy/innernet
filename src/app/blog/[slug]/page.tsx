@@ -4,17 +4,21 @@ import { createSupabaseServerClient } from "@/app/lib/supabase-server";
 import Header from "@/app/components/Header";
 import MarkAsReadButton from "@/app/components/MarkAsReadButton";
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+interface PageProps {
+  params: Promise<{
+    [slug: string]: string;
+  }>;
+}
+
+export default async function BlogPostPage({ params }: PageProps) {
+  const resolvedSearchParams = await params;
+  const { slug } = resolvedSearchParams;
   const supabase = createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single();
 
   if (error || !data) return notFound();
@@ -40,10 +44,7 @@ export default async function BlogPostPage({
           />
 
           <div className="flex justify-end">
-            <MarkAsReadButton
-              slug={params.slug}
-              growthArea={data.growth_area}
-            />
+            <MarkAsReadButton slug={slug} growthArea={data.growth_area} />
           </div>
         </section>
       </div>
