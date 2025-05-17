@@ -52,17 +52,18 @@ export default function LandingPage() {
           <WaitlistForm />
 
           {/* Scroll indicator */}
-          <div className="mt-12 animate-bounce text-blue-600 text-2xl">↓</div>
+          <div className="mt-12 animate-bounce text-blue-600 text-3xl">↓</div>
         </section>
 
         {/* Rest of the page scrolls below */}
-        <section className="px-6 py-20 max-w-4xl mx-auto space-y-24">
+        <section className="px-6 py-20 max-w-5xl mx-auto space-y-24">
           {/* Thought */}
           <div className="flex flex-col md:flex-row items-center gap-8">
             {/* Text */}
             <div className="md:w-1/2">
+              <div className="text-4xl mb-4">🌱 </div>
               <h2 className="text-3xl font-bold text-blue-800 mb-2">
-                🌱 Share Your Thoughts
+                Share Your Thoughts
               </h2>
               <p className="text-gray-700 mb-3">
                 Write what’s really on your mind - no filters, no pressure.
@@ -92,8 +93,9 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
             {/* Text */}
             <div className="md:w-1/2">
+              <div className="text-4xl mb-4">🌳 </div>
               <h2 className="text-3xl font-bold text-blue-800 mb-2">
-                🌳 Grow Your Inner Tree
+                Grow Your Inner Tree
               </h2>
               <p className="text-gray-700 mb-3">
                 Every reflection helps you grow. Innernet tracks your progress
