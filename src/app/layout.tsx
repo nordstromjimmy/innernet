@@ -19,13 +19,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          defer
+          data-domain="innernetapp.com"
+          src="https://plausible.io/js/script.js"
+        ></script>
+      </head>
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <link rel="canonical" href="https://innernetapp.com/" />
-      <script
-        defer
-        data-domain="innernetapp.com"
-        src="https://plausible.io/js/script.js"
-      ></script>
+
       <meta name="robots" content="index, follow" />
       <body className="flex flex-col min-h-screen bg-gradient-to-br from-white to-blue-100 text-gray-800">
         <main className="flex-grow">
