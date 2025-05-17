@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { UserProfileProvider } from "./context/UserProfileContext";
 import { Toaster } from "react-hot-toast";
 import Footer from "./components/Footer";
-import PlausibleProvider from "next-plausible";
 
 export const metadata: Metadata = {
   icons: {
@@ -22,9 +21,13 @@ export default function RootLayout({
     <html lang="en">
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <link rel="canonical" href="https://innernetapp.com/" />
+      <script
+        defer
+        data-domain="innernetapp.com"
+        src="https://plausible.io/js/script.js"
+      ></script>
       <meta name="robots" content="index, follow" />
       <body className="flex flex-col min-h-screen bg-gradient-to-br from-white to-blue-100 text-gray-800">
-        <PlausibleProvider domain="innernetapp.com"></PlausibleProvider>
         <main className="flex-grow">
           <Toaster position="top-center" />
           <UserProfileProvider>{children}</UserProfileProvider>
