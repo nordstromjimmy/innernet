@@ -2,19 +2,16 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const url = req.nextUrl;
-  const pathname = url.pathname;
+  const publicRoutes = ["/", "/terms", "/privacy"];
+  const { pathname } = req.nextUrl;
 
-  const isLandingPage = pathname === "/";
+  const isPublic = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
 
-  // Optional: Add a launch toggle
-  const isAppLive = process.env.APP_LIVE === "true";
+  if (isPublic) return NextResponse.next();
 
-  if (isLandingPage || isAppLive) {
-    return NextResponse.next();
-  }
-
-  // Redirect all other routes to landing page
+  // Block everything else
   return NextResponse.redirect(new URL("/", req.url));
 }
 
