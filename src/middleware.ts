@@ -8,7 +8,7 @@ export function middleware(req: NextRequest) {
   const isLandingPage = pathname === "/";
 
   // Optional: Add a launch toggle
-  const isAppLive = process.env.APP_LIVE === "true";
+  const isAppLive = "false";
 
   if (isLandingPage || isAppLive) {
     return NextResponse.next();
