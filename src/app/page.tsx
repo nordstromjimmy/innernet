@@ -56,12 +56,56 @@ export default function LandingPage() {
         </section>
 
         {/* Rest of the page scrolls below */}
+        {/* Steps */}
         <section className="px-6 py-20 max-w-5xl mx-auto space-y-24">
+          <h2 className="text-3xl font-extrabold text-blue-900 text-center mb-12">
+            How It Works
+          </h2>
+          <p className="text-gray-600 text-center max-w-xl mx-auto -mt-8 mb-12">
+            A simple path from expression to reflection — and personal growth.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div className="p-6 border rounded-lg shadow bg-white transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:border-blue-300 hover:cursor-default">
+              <h3 className="text-xl font-semibold text-blue-800 mb-2">
+                🌱 1. Share a Thought
+              </h3>
+              <p className="text-gray-700">
+                Speak freely and honestly — this is your private space.
+              </p>
+            </div>
+            <div className="p-6 border rounded-lg shadow bg-white transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:border-blue-300 hover:cursor-default">
+              <h3 className="text-xl font-semibold text-blue-800 mb-2">
+                🔁 2. Get Your Echo
+              </h3>
+              <p className="text-gray-700">
+                Receive a kind AI reflection that helps you understand more
+                deeply.
+              </p>
+            </div>
+            <div className="p-6 border rounded-lg shadow bg-white transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:border-blue-300 hover:cursor-default">
+              <h3 className="text-xl font-semibold text-blue-800 mb-2">
+                🌳 3. Grow Over Time
+              </h3>
+              <p className="text-gray-700">
+                Earn XP and track your growth through emotional skill trees.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-6 py-60 max-w-5xl mx-auto space-y-24">
           {/* Thought */}
+          <h2 className="text-3xl font-extrabold text-blue-900 text-center mb-4">
+            A Glimpse Inside the Experience
+          </h2>
+          <p className="text-gray-600 text-center max-w-xl mx-auto mb-12">
+            Here's a preview of how Innernet helps you reflect, grow, and level
+            up — all from a quiet, personal space built just for your thoughts.
+          </p>
           <div className="flex flex-col md:flex-row items-center gap-8">
             {/* Text */}
             <div className="md:w-1/2">
-              <div className="text-4xl mb-4">🌱 </div>
+              {/* <div className="text-4xl mb-4">🌱 </div> */}
               <h2 className="text-3xl font-bold text-blue-800 mb-2">
                 Share Your Thoughts
               </h2>
@@ -93,7 +137,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
             {/* Text */}
             <div className="md:w-1/2">
-              <div className="text-4xl mb-4">🌳 </div>
+              {/* <div className="text-4xl mb-4">🌳 </div> */}
               <h2 className="text-3xl font-bold text-blue-800 mb-2">
                 Grow Your Inner Tree
               </h2>
@@ -121,9 +165,9 @@ export default function LandingPage() {
           </div>
 
           {/* CTA */}
-          <div className="text-center mt-16">
+          <div className="text-center mt-16 py-20">
             <h2 className="text-3xl font-bold text-blue-800 mb-2">
-              Ready to Go Inward?
+              Your Journey Starts Here, Ready?
             </h2>
             <p className="text-gray-700 mb-6">
               Join the waitlist and be first to know when Innernet launches.
