@@ -44,7 +44,7 @@ export default function PrivacyPolicy() {
         <p>
           Questions?{" "}
           <a
-            href="mailto:nordstromjimmy@gmail.com"
+            href="mailto:info@innernetapp.com"
             className="text-blue-600 hover:underline"
           >
             Reach out{" "}

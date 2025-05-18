@@ -14,7 +14,7 @@ export default function Footer() {
           <a href="/terms" className="hover:underline">
             Terms
           </a>
-          <a href="mailto:nordstromjimmy@gmail.com" className="hover:underline">
+          <a href="mailto:info@innernetapp.com" className="hover:underline">
             Contact
           </a>
         </div>
