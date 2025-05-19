@@ -61,15 +61,17 @@ export default function ThoughtForm({
     if (error) {
       console.error("Error saving thought:", error.message);
     } else {
-      // Start echo generation
-      await fetch("/api/echo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          thoughtId: data.id,
-          content: data.content,
-        }),
-      });
+      if (!data.echo) {
+        // Only trigger if echo is not already present
+        await fetch("/api/echo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            thoughtId: data.id,
+            content: data.content,
+          }),
+        });
+      }
 
       // Wait for echo to be generated before adding to UI
       const fullThought = await waitForEcho(data.id);
@@ -120,9 +122,9 @@ export default function ThoughtForm({
       <button
         type="submit"
         disabled={submitting}
-        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
+        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
       >
-        {submitting ? "Posting..." : "Post Thought"}
+        {submitting ? "Generating echo..." : "Post Thought"}
       </button>
     </form>
   );

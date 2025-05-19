@@ -1,4 +1,19 @@
-// /lib/leveling.ts
+import {
+  FiHeart,
+  FiTarget,
+  FiShield,
+  FiSearch,
+  FiSmile,
+  FiZap,
+  FiHeadphones,
+  FiFeather,
+  FiUsers,
+  FiSun,
+  FiCompass,
+} from "react-icons/fi";
+import { BsEmojiSmile, BsQuestionDiamond } from "react-icons/bs";
+import { MdPsychology, MdSelfImprovement } from "react-icons/md";
+import { IconType } from "react-icons";
 
 export function getSkillLevel(xp: number): number {
   return Math.floor(xp / 100) + 1;
@@ -42,21 +57,21 @@ export const skillColors: Record<string, string> = {
   empathy: "bg-purple-500", // In case you still use this
 };
 
-export const skillIcons: Record<string, string> = {
-  "self-worth": "💪",
-  doubt: "🌀",
-  resilience: "🛡️",
-  awareness: "🧠",
-  "emotional-awareness": "💓",
-  acceptance: "🫶",
-  vulnerability: "🌧️",
-  purpose: "🎯",
-  forgiveness: "🕊️",
-  focus: "🎧",
-  healing: "🌿",
-  courage: "🔥",
-  gratitude: "🌸",
-  curiosity: "🔍",
-  connection: "🤝",
-  empathy: "💛", // if still used
+export const skillIcons: Record<string, IconType> = {
+  "self-worth": MdSelfImprovement,
+  doubt: BsQuestionDiamond,
+  resilience: FiShield,
+  awareness: FiCompass,
+  "emotional-awareness": FiHeart,
+  acceptance: FiSmile,
+  vulnerability: FiFeather,
+  purpose: FiTarget,
+  forgiveness: FiSun,
+  focus: FiHeadphones,
+  healing: FiHeart,
+  courage: FiZap,
+  gratitude: BsEmojiSmile,
+  curiosity: FiSearch,
+  connection: FiUsers,
+  empathy: MdPsychology,
 };

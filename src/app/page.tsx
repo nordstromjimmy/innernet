@@ -1,9 +1,10 @@
 import WaitlistForm from "./components/WaitlistForm";
 import { ModalProvider } from "./components/ModalImageViewer";
 import PreviewImage from "./components/PreviewImage";
+import { FiEdit, FiMessageSquare, FiBarChart2 } from "react-icons/fi";
 
 export const metadata = {
-  title: "Innernetet – Build Your Inner Net",
+  title: "Innernetet – Grow Your Inner Tree",
   description:
     "A quiet, emotionally intelligent space to share your real thoughts and grow your inner world. No followers. No filters. Just you.",
   openGraph: {
@@ -66,25 +67,36 @@ export default function LandingPage() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div className="p-6 border rounded-lg shadow bg-white transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:border-blue-300 hover:cursor-default">
+              <div className="flex justify-center mb-2 text-blue-800 text-3xl">
+                <FiEdit />
+              </div>
               <h3 className="text-xl font-semibold text-blue-800 mb-2">
-                🌱 1. Share a Thought
+                1. Share a Thought
               </h3>
               <p className="text-gray-700">
                 Speak freely and honestly — this is your private space.
               </p>
             </div>
+
             <div className="p-6 border rounded-lg shadow bg-white transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:border-blue-300 hover:cursor-default">
+              <div className="flex justify-center mb-2 text-blue-800 text-3xl">
+                <FiMessageSquare />
+              </div>
               <h3 className="text-xl font-semibold text-blue-800 mb-2">
-                🔁 2. Get Your Echo
+                2. Get Your Echo
               </h3>
               <p className="text-gray-700">
                 Receive a kind AI reflection that helps you understand more
                 deeply.
               </p>
             </div>
+
             <div className="p-6 border rounded-lg shadow bg-white transition-transform transform hover:-translate-y-1 hover:shadow-lg hover:border-blue-300 hover:cursor-default">
+              <div className="flex justify-center mb-2 text-blue-800 text-3xl">
+                <FiBarChart2 />
+              </div>
               <h3 className="text-xl font-semibold text-blue-800 mb-2">
-                🌳 3. Grow Over Time
+                3. Grow Over Time
               </h3>
               <p className="text-gray-700">
                 Earn XP and track your growth through emotional skill trees.

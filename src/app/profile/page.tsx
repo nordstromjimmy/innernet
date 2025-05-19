@@ -15,6 +15,7 @@ import {
 } from "../lib/leveling";
 import { useUserProfile } from "../context/UserProfileContext";
 import toast from "react-hot-toast";
+import { MdTaskAlt } from "react-icons/md";
 
 export default function ProfilePage() {
   const { loading } = useRequireAuth();
@@ -98,13 +99,19 @@ export default function ProfilePage() {
     await refreshProfile(); // ⬅️ refresh the context
   };
 
-  const handleCompleteTask = async (thoughtId: string, growthArea: string) => {
+  const handleCompleteTask = async (
+    thoughtId: string,
+    growthArea: string,
+    subtask: "action" | "resource"
+  ) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    // 1. Grant XP
+    toast.success("XP received!", { duration: 2000 });
+
+    // Award XP
     const { data: existingSkill } = await supabase
       .from("skills")
       .select("*")
@@ -118,23 +125,37 @@ export default function ProfilePage() {
         .update({ xp: existingSkill.xp + 15 })
         .eq("id", existingSkill.id);
     } else {
-      await supabase.from("skills").insert([
-        {
-          user_id: user.id,
-          category: growthArea,
-          xp: 15,
-        },
-      ]);
+      await supabase
+        .from("skills")
+        .insert([{ user_id: user.id, category: growthArea, xp: 15 }]);
     }
 
-    // 2. Mark thought as resolved
-    await supabase
-      .from("thoughts")
-      .update({ xp_awarded: true })
-      .eq("id", thoughtId);
+    // Mark the correct subtask as completed
+    const columnToUpdate =
+      subtask === "action"
+        ? { action_completed: true }
+        : { resource_clicked: true };
 
-    // 3. Refresh UI
-    setTasks((prev) => prev.filter((task) => task.id !== thoughtId));
+    await supabase.from("thoughts").update(columnToUpdate).eq("id", thoughtId);
+
+    // Refresh task UI
+    setTasks((prev) =>
+      prev
+        .map((task) =>
+          task.id === thoughtId ? { ...task, ...columnToUpdate } : task
+        )
+        // Remove the task only if both parts are done
+        .filter(
+          (task) =>
+            !(
+              task.id === thoughtId &&
+              task.action_completed &&
+              task.resource_clicked
+            )
+        )
+    );
+
+    // Update skill progress locally
     setSkills((prev) => {
       const existing = prev.find((s) => s.category === growthArea);
       if (existing) {
@@ -284,7 +305,7 @@ export default function ProfilePage() {
           ) : (
             <div className="space-y-4">
               {skills.map((skill) => {
-                const icon = skillIcons[skill.category] || "✨";
+                const Icon = skillIcons[skill.category];
                 const skillName = formatSkillName(skill.category);
                 const level = getSkillLevel(skill.xp);
                 const xpInLevel = getSkillProgress(skill.xp);
@@ -294,7 +315,8 @@ export default function ProfilePage() {
                 return (
                   <div key={skill.category}>
                     <p className="text-sm text-gray-700 mb-1">
-                      {icon} {skillName} — Level {level} ({xpInLevel}/100 XP)
+                      <Icon size={18} color="#155dfc" />
+                      {skillName} — Level {level} ({xpInLevel}/100 XP)
                     </p>
                     <div className="w-full bg-gray-200 rounded h-3">
                       <div
@@ -315,7 +337,9 @@ export default function ProfilePage() {
             Growth Tasks
           </h2>
           {tasks.length === 0 ? (
-            <p className="text-gray-600">No tasks available 🎉</p>
+            <p className="flex items-center gap-1 text-gray-600">
+              No tasks available <MdTaskAlt size={20} color="#155dfc" />
+            </p>
           ) : (
             <ul className="space-y-4">
               {tasks.map((task) => (
@@ -331,22 +355,49 @@ export default function ProfilePage() {
                       💬 {task.echo}
                     </p>
                   )}
-                  {task.action && (
-                    <p className="text-sm text-gray-700 mb-3">
-                      📌 <strong>Suggested reflection:</strong> {task.action}
-                    </p>
+                  {!task.action_completed && task.action && (
+                    <>
+                      <p className="text-sm text-gray-700 mb-2">
+                        📌 <strong>Suggested reflection:</strong> {task.action}
+                      </p>
+                      <button
+                        onClick={() =>
+                          handleCompleteTask(task.id, task.growthArea, "action")
+                        }
+                        className="text-sm bg-yellow-500 text-white mt-2 mb-2 px-3 py-1 rounded hover:bg-yellow-600 cursor-pointer"
+                      >
+                        Mark As Complete
+                      </button>
+                    </>
                   )}
-
                   <p className="text-xs text-gray-600 mb-2">
                     Growth Area: {formatSkillName(task.growthArea)} — Earn 15 XP
-                    by completing this task
+                    by completing the task below:
                   </p>
-                  <button
-                    onClick={() => handleCompleteTask(task.id, task.growthArea)}
-                    className="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 cursor-pointer"
-                  >
-                    Complete Task
-                  </button>
+                  {!task.resource_clicked && task.externalResource && (
+                    <>
+                      <a
+                        href={task.externalResource}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 hover:underline block mb-2"
+                      >
+                        📚 Learn More About {task.growthArea.replace("-", " ")}
+                      </a>
+                      <button
+                        onClick={() =>
+                          handleCompleteTask(
+                            task.id,
+                            task.growthArea,
+                            "resource"
+                          )
+                        }
+                        className="text-sm bg-yellow-500 text-white mt-2 px-3 py-1 rounded hover:bg-yellow-600 cursor-pointer"
+                      >
+                        Mark As Complete
+                      </button>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>

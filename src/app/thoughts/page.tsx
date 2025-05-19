@@ -4,6 +4,11 @@ import Header from "../components/Header";
 import { useRequireAuth } from "../hooks/useRequireAuth ";
 import { supabase } from "../lib/supabase-browser";
 import ThoughtForm from "../components/ThoughtForm";
+import toast from "react-hot-toast";
+import { FiTrash2 } from "react-icons/fi";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { BsPinAngleFill } from "react-icons/bs";
+import { SlBubble } from "react-icons/sl";
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
@@ -13,19 +18,91 @@ function formatDate(dateStr: string) {
 export default function HomePage() {
   const { loading } = useRequireAuth();
   const [thoughts, setThoughts] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const thoughtsPerPage = 5;
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  useEffect(() => {
+    loadThoughts();
+  }, []);
 
   useEffect(() => {
     const fetchThoughts = async () => {
       const { data, error } = await supabase
         .from("thoughts")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .range((page - 1) * thoughtsPerPage, page * thoughtsPerPage - 1);
 
       if (!error) setThoughts(data || []);
     };
 
     fetchThoughts();
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+
+      if (bottom && hasMore && !loadingMore) {
+        loadThoughts();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasMore, loadingMore]);
+
+  const loadThoughts = async () => {
+    setLoadingMore(true);
+
+    const { data, error } = await supabase
+      .from("thoughts")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .range((page - 1) * thoughtsPerPage, page * thoughtsPerPage - 1);
+
+    if (error) {
+      console.error(error);
+      setLoadingMore(false);
+      return;
+    }
+
+    if (data.length < thoughtsPerPage) {
+      setHasMore(false);
+    }
+
+    setThoughts((prev) => {
+      const newThoughts = data.filter(
+        (t) => !prev.some((existing) => existing.id === t.id)
+      );
+      return [...prev, ...newThoughts];
+    });
+    setPage((prev) => prev + 1);
+    setLoadingMore(false);
+  };
+
+  const handleDeleteThought = async (thoughtId: string) => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this thought?"
+    );
+    if (!confirm) return;
+
+    const { error } = await supabase
+      .from("thoughts")
+      .delete()
+      .eq("id", thoughtId);
+
+    if (error) {
+      console.error("Failed to delete thought:", error.message);
+    } else {
+      // Refresh the list
+      setThoughts((prev) => prev.filter((t) => t.id !== thoughtId));
+      toast("Thought Deleted!", { duration: 2000 });
+    }
+  };
 
   return (
     <main className="px-4">
@@ -49,9 +126,21 @@ export default function HomePage() {
           <ul className="space-y-4">
             {thoughts.map((thought) => (
               <li key={thought.id} className="bg-white shadow p-4 rounded-lg">
-                <p className="text-gray-800 whitespace-pre-line">
-                  {thought.content}
-                </p>
+                <div className="relative">
+                  <p className="text-gray-800 whitespace-pre-line">
+                    {thought.content}
+                  </p>
+                  <button
+                    onClick={() => handleDeleteThought(thought.id)}
+                    className="absolute top-0 right-2 text-gray-400 hover:text-red-600 text-xl font-bold cursor-pointer"
+                    title="Delete thought"
+                  >
+                    <FiTrash2
+                      size={20}
+                      className="text-blue-700 hover:text-red-600"
+                    />
+                  </button>
+                </div>
 
                 {thought.echo ? (
                   <div
@@ -63,9 +152,13 @@ export default function HomePage() {
                         : "border-blue-500 bg-blue-50"
                     }`}
                   >
-                    <p className="text-sm text-gray-900 italic">
-                      💬 {thought.echo}
-                    </p>
+                    <div>
+                      <SlBubble className="text-blue-600 mb-2" />{" "}
+                      <p className="text-sm text-gray-900 italic">
+                        {thought.echo}
+                      </p>
+                    </div>
+
                     <div className="text-xs text-gray-600 mt-2 flex justify-between">
                       <span>
                         Growth Area: {thought.growthArea}{" "}
@@ -75,10 +168,12 @@ export default function HomePage() {
                           </span>
                         )}
                         {thought.mood === "negative" && (
-                          <span className="text-yellow-600 font-medium">
-                            – 📌
+                          <span className="flex items-center gap-1">
+                            <BsPinAngleFill className="text-blue-600" />
                             <a href="/profile" className="cursor-pointer">
-                              New task on profile
+                              <span className="text-blue-600 font-medium">
+                                - New task on profile
+                              </span>
                             </a>
                           </span>
                         )}
@@ -91,13 +186,19 @@ export default function HomePage() {
                     ⏳ Loading echo...
                   </p>
                 )}
-                <div className="flex justify-end mt-2 text-sm text-gray-500 mb-2">
-                  <span>🗓️ {formatDate(thought.created_at)}</span>
+                <div className="flex justify-end gap-2 items-center mt-2 text-sm text-gray-500 mb-2">
+                  <FaRegCalendarAlt color="#155dfc" />{" "}
+                  {formatDate(thought.created_at)}
                 </div>
               </li>
             ))}
           </ul>
         </div>
+        {loadingMore && (
+          <div className="text-center py-6 text-sm text-gray-500">
+            Loading more...
+          </div>
+        )}
       </section>
     </main>
   );

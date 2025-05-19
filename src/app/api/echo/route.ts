@@ -18,36 +18,81 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing input" }, { status: 400 });
   }
 
-  const prompt = `
-You are a wise, emotionally intelligent AI guide who helps people understand their inner world.
+  // --- STEP 1: Classify Intent ---
+  const classificationPrompt = `
+You are an intent classifier for a journaling and self-reflection app.
 
-A user has shared the following personal thought:
+A user submitted this message:
 "${content}"
 
-Your job is to reflect with empathy, provide gentle insight, and encourage growth.
+Does this message appear to be emotionally reflective, introspective, or relevant for inner growth?
 
-Please return a JSON object with this structure:
-
+Respond with JSON only:
 {
-  "echo": "<A kind, insightful reflection (2–4 sentences) that helps the user gently see their thought from a new perspective. Speak warmly and humanely, as if you're a compassionate mentor or inner guide.>",
-  "growthArea": "<A single word that captures the inner theme of this thought — such as self-worth, identity, resilience, doubt, purpose, emotional-awareness, vulnerability, healing, or connection. This should reflect the *area of personal growth* this thought touches.>",
-  "mood": "<positive | neutral | negative — based on the emotional tone of the original thought.>",
-  "action": "<If mood is negative, suggest a small, practical inner exercise or reflection the user can try. Keep it gentle and doable (e.g. 'Try writing down three things you need to forgive yourself for.'). If mood is positive or neutral, return an empty string.>"
+  "relevant": true | false,
+  "reason": "<brief explanation>"
 }
-
-Only return the JSON object — do not explain or add anything else.
 `;
 
   try {
-    const completion = await openai.chat.completions.create({
+    const classification = await openai.chat.completions.create({
       model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
+      temperature: 0,
+      messages: [{ role: "user", content: classificationPrompt }],
     });
 
-    const rawResponse = completion.choices[0]?.message?.content;
-    const parsed = JSON.parse(rawResponse || "{}");
-    const { echo, growthArea, mood, action } = parsed;
+    const parsed = JSON.parse(
+      classification.choices[0].message?.content || "{}"
+    );
+
+    if (!parsed.relevant) {
+      // Update Supabase with fallback echo
+      await supabase
+        .from("thoughts")
+        .update({
+          echo: "Hmm, this doesn’t seem like a reflective thought. I’m best at helping with personal growth and self-awareness. Try sharing how you feel or what’s been on your mind lately.",
+          growthArea: null,
+          mood: "neutral",
+        })
+        .eq("id", thoughtId);
+
+      return NextResponse.json({
+        success: true,
+        echo: "Hmm, this doesn’t seem like a reflective thought. I’m best at helping with personal growth and self-awareness.",
+        growthArea: null,
+        mood: "neutral",
+      });
+    }
+
+    // --- STEP 2: Proceed with Echo if Relevant ---
+    const echoPrompt = `
+You are a wise, emotionally intelligent AI guide. A user has shared the following thought:
+
+"${content}"
+
+Please return a JSON object with:
+{
+  "echo": "<A kind, insightful reflection (2–4 sentences) that helps the user gently see their thought from a new perspective. Speak warmly and humanely, as if you're a compassionate mentor or inner guide.>",
+  "growthArea": "<A single word that captures the inner theme of this thought — such as self-worth, identity, resilience, doubt, purpose, emotional-awareness, vulnerability, healing, or connection. This should reflect the *area of personal growth* this thought touches.>",
+  "mood": "<positive | neutral | negative — based on the emotional tone of the original thought.>"
+  "action": "<If mood is negative, suggest a small, practical inner exercise or reflection the user can try. Keep it gentle and doable (e.g. 'Try writing down three things you need to forgive yourself for.'). If mood is positive or neutral, return an empty string.>"
+  "externalResource": "<A helpful article or video URL if available, otherwise empty string>"
+}
+  If you provide an externalResource, only link to well-known mental health or psychology resources (e.g. Verywell Mind, Psychology Today, YouTube TED Talks, etc). If none available, return an empty string.
+  Only return the JSON object — do not explain or add anything else.
+`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      temperature: 0.7,
+      messages: [{ role: "user", content: echoPrompt }],
+    });
+
+    const echoResponse = JSON.parse(
+      completion.choices[0].message?.content || "{}"
+    );
+
+    const { echo, growthArea, mood, action, externalResource } = echoResponse;
 
     if (!echo || !growthArea || !mood) {
       return NextResponse.json(
@@ -104,15 +149,10 @@ Only return the JSON object — do not explain or add anything else.
       xp_awarded = true;
     }
 
-    await supabase
-      .from("thoughts")
-      .update({ echo, growthArea, mood, action, xp_awarded })
-      .eq("id", thoughtId);
-
     // Update thought with GPT response and XP info
     const { error } = await supabase
       .from("thoughts")
-      .update({ echo, growthArea, mood, xp_awarded })
+      .update({ echo, growthArea, action, mood, xp_awarded, externalResource })
       .eq("id", thoughtId);
 
     if (error) {
@@ -123,7 +163,14 @@ Only return the JSON object — do not explain or add anything else.
       );
     }
 
-    return NextResponse.json({ success: true, echo, growthArea, mood });
+    return NextResponse.json({
+      success: true,
+      echo,
+      growthArea,
+      action,
+      mood,
+      externalResource,
+    });
   } catch (err: any) {
     console.error("GPT error:", err.message);
     return NextResponse.json({ error: "GPT failed" }, { status: 500 });
